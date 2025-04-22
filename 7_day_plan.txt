@@ -1,5 +1,5 @@
 Day 1:
- - Get Old Project to Run (copy into new Android studio project
+ X - Get Old Project to Run (copy into new Android studio project
  - set up flutter framework to build for cross platform
  - Have Landing page and chord page existing
 
