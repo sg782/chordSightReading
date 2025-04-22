@@ -1,0 +1,27 @@
+Day 1:
+ - Get Old Project to Run (copy into new Android studio project
+ - set up flutter framework to build for cross platform
+ - Have Landing page and chord page existing
+
+Day 2:
+ - convert all java code into dart
+ - successfully draw staff and notes
+ - get app somewhat working in flutter/dart
+
+Day 3:
+ - improve user interface
+
+Day 4: 
+ - add support for audio generation (sine wave)
+
+Day 5: 
+ - padding
+
+Day 6:
+ - padding
+
+Day 7:
+ - begin work to publish to Android play store
+ - begin work to publish to Apple store
+ 
+ 

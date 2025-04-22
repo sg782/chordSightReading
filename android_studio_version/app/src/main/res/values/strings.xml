@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">chordSightReadingRedo</string>
+    <string name="test_button">Start</string>
+    <string name="note_count">Note Count:</string>
+    <string name="note_range">Note Range</string>
+    <string name="lowest_note">Lowest Note</string>
+    <string name="difficulty">Difficulty:</string>
+    <string name="range">Range:</string>
+    <string name="lowest_note_text">Lowest Note:</string>
+    <string name="closebutton">Back</string>
+    <string name="whole_note_desc">this is a whole note</string>
+
+    <!-- array for testing dropdown -->
+    <string-array name="Options">
+        <item>DoubleFlat</item>
+        <item>Flat</item>
+        <item>Natural</item>
+        <item>Sharp</item>
+        <item>DoubleSharp</item>
+    </string-array>
+</resources>
