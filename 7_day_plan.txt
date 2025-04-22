@@ -1,7 +1,7 @@
 Day 1:
  X - Get Old Project to Run (copy into new Android studio project
- - set up flutter framework to build for cross platform
- - Have Landing page and chord page existing
+ X - set up flutter framework to build for cross platform
+ X - Have Landing page and chord page existing
 
 Day 2:
  - convert all java code into dart
