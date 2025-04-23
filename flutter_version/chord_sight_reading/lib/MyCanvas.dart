@@ -19,7 +19,11 @@ class Staff{
 
   Future<void> loadImage(String assetPath) async {
     final data = await rootBundle.load(assetPath);
-    final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    final codec = await ui.instantiateImageCodec(
+      data.buffer.asUint8List(),
+      // targetWidth: 50,
+      // targetHeight: 50,
+    );
     final frame = await codec.getNextFrame();
     wholeNote = frame.image;
   }
@@ -29,7 +33,8 @@ class Staff{
     double sidePadding = size.width /15.0;
     final paint = Paint()
       ..color = Colors.black
-      ..strokeWidth = 2;
+      ..strokeWidth = 2
+      ..filterQuality = FilterQuality.high;
 
     // crude staff
     double staffLineHeight = 30;
@@ -42,7 +47,13 @@ class Staff{
       canvas.drawCircle(Offset(50, note * 10),5,paint);
 
       if (wholeNote != null) {
-        canvas.drawImage(wholeNote!, Offset(60, note * 10), paint);
+        // canvas.drawImage(wholeNote!, Offset(60, note * 10), paint);
+
+        // final paint = Paint();
+        final src = Rect.fromLTWH(0, 0, wholeNote!.width.toDouble(), wholeNote!.height.toDouble());
+        final dst = Rect.fromLTWH(100, 100, 40, 40); // Resize to 40x40 and draw at (100, 100)
+
+        canvas.drawImageRect(wholeNote!, src, dst, paint);
       }else{
         print("not loaded");
       }
