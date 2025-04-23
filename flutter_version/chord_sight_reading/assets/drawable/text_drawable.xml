@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF" />
+    <corners android:radius="4dp" />
+    <padding android:left="8dp" android:top="4dp" android:right="8dp" android:bottom="4dp" />
+    <size android:width="10px" android:height="10px" />
+    <TextView
+        android:text="Text Drawable"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+</shape>

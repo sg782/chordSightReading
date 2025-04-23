@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:chord_sight_reading/MyCanvas.dart';
+import 'package:chord_sight_reading/utils.dart';
 import 'package:flutter/material.dart';
 // function to trigger build when the app is run
 void main() {
@@ -22,7 +24,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   // const MainPage({Key? key}) : super(key: key);
-  double _currentDiscreteSliderValue = 60;
 
   double noteCountNum = 5;
   double minNoteCount = 1;
@@ -40,12 +41,29 @@ class _MainPageState extends State<MainPage> {
   bool trebleChecked = true;
   bool bassChecked = false;
 
+  Staff staff = Staff();
+
+  bool ready = false;
+
+  @override
+  void initState() {
+    print("here");
+    super.initState();
+    staff.loadImage('assets/drawable/wholenote.png').then((_) {
+      setState(() => ready = true);
+    });
+  }
+
 
   // create my canvas class
 
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.sizeOf(context).width;
+    double height = MediaQuery.sizeOf(context).height;
+    double sidePadding = width /10.0;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Front Page'),
@@ -103,8 +121,8 @@ class _MainPageState extends State<MainPage> {
               },
             ), // ElevatedButton
             CustomPaint(
-              size: Size(100,100),
-              painter: previewStaffPainter(noteCountNum, rangeNum, lowestNoteNum),
+              size: Size(width,height * 0.5),
+              painter: previewStaffPainter(staff, noteCountNum, rangeNum, lowestNoteNum),
             ),
           ], // <Widget>[]
         ), // Column
@@ -139,30 +157,27 @@ class SecondRoute extends StatelessWidget {
   }
 }
 
+
 class previewStaffPainter extends CustomPainter {
   final double numNotes;
   final double noteRange;
   final double lowestNote;
+  final Staff staff;
 
-  previewStaffPainter(this.numNotes,this.noteRange,this.lowestNote);
-
+  previewStaffPainter(this.staff, this.numNotes,this.noteRange,this.lowestNote);
 
   @override
   void paint(Canvas canvas, Size size) {
+
+    // Staff staff  = Staff();
+    List<int> notes = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
+    staff.draw(canvas,size, notes);
+
 
     // Repaints any time its params update
 
     // should make staff class
 
-    final paint = Paint()
-      ..color = Colors.black
-      ..strokeWidth = 2;
-
-    // crude staff
-    double staffLineHeight = 30;
-    for(int i=1;i<=5;i++){
-      canvas.drawLine(Offset(10,i * staffLineHeight),Offset(size.width-10,i * staffLineHeight),paint);
-    }
 
 
     //for path in path list { draw path }
