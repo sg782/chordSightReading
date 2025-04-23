@@ -1,50 +1,111 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 // function to trigger build when the app is run
 void main() {
   runApp(MaterialApp(
     initialRoute: '/',
     routes: {
-      '/': (context) => const HomeRoute(),
+      '/': (context) => const MainPage(),
       '/second': (context) => const SecondRoute(),
-      '/third': (context) => const ThirdRoute(),
     },
     debugShowCheckedModeBanner: false,
   )); //MaterialApp
 }
 
-class HomeRoute extends StatelessWidget {
-  const HomeRoute({Key? key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  // const MainPage({Key? key}) : super(key: key);
+  double _currentDiscreteSliderValue = 60;
+
+  double noteCountNum = 5;
+  double minNoteCount = 1;
+  double maxNoteCount = 10;
+
+
+  double rangeNum = 10;
+  double minRangeNum = 2;
+  double maxRangeNum = 52;
+
+  double lowestNoteNum = 25;
+  double minNoteNum = 1;
+  double maxNoteNum = 52;
+
+  bool trebleChecked = true;
+  bool bassChecked = false;
+
+
+  // create my canvas class
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Geeks for Geeks'),
+        title: const Text('Front Page'),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
       ), // AppBar
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            Slider(
+              value: noteCountNum,
+              min: minNoteCount,
+              max: maxNoteCount,
+              divisions: (maxNoteCount - minNoteCount).ceil(),
+              label: noteCountNum.round().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  noteCountNum = value;
+                });
+              },
+            ),
+            Slider(
+              value: rangeNum,
+              min: minRangeNum,
+              max: maxRangeNum,
+              divisions: (maxRangeNum - minRangeNum).ceil(),
+              label: rangeNum.round().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  rangeNum = value;
+                });
+              },
+            ),
+            Slider(
+              value: lowestNoteNum,
+              min: minNoteNum,
+              max: maxNoteNum,
+              divisions: (maxNoteNum - minNoteNum).ceil(),
+              label: lowestNoteNum.round().toString(),
+              onChanged: (double value) {
+                setState(() {
+                  lowestNoteNum = value;
+                });
+              },
+            ),
+            
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all(Colors.green),
                   foregroundColor: WidgetStateProperty.all(Colors.white)),
-              child: const Text('Click Me!'),
+              child: const Text('Start!'),
               onPressed: () {
                 Navigator.pushNamed(context, '/second');
               },
             ), // ElevatedButton
-            ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(Colors.green),
-                  foregroundColor: WidgetStateProperty.all(Colors.white)),
-              child: const Text('Tap Me!'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/third');
-              },
-            ), // ElevatedButton
+            CustomPaint(
+              size: Size(100,100),
+              painter: previewStaffPainter(noteCountNum, rangeNum, lowestNoteNum),
+            ),
           ], // <Widget>[]
         ), // Column
       ), // Center
@@ -78,17 +139,39 @@ class SecondRoute extends StatelessWidget {
   }
 }
 
-class ThirdRoute extends StatelessWidget {
-  const ThirdRoute({Key? key}) : super(key: key);
+class previewStaffPainter extends CustomPainter {
+  final double numNotes;
+  final double noteRange;
+  final double lowestNote;
+
+  previewStaffPainter(this.numNotes,this.noteRange,this.lowestNote);
+
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Tap Me Page"),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-      ), // AppBar
-    ); // Scaffold
+  void paint(Canvas canvas, Size size) {
+
+    // Repaints any time its params update
+
+    // should make staff class
+
+    final paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 2;
+
+    // crude staff
+    double staffLineHeight = 30;
+    for(int i=1;i<=5;i++){
+      canvas.drawLine(Offset(10,i * staffLineHeight),Offset(size.width-10,i * staffLineHeight),paint);
+    }
+
+
+    //for path in path list { draw path }
+
+  }
+
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true; // Ensures the canvas is redrawn with each update
   }
 }
