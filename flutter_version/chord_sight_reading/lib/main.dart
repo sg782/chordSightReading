@@ -25,6 +25,8 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   // const MainPage({Key? key}) : super(key: key);
 
+
+  // should encapsulate all these sliders and switches into a settings widget
   double noteCountNum = 5;
   double minNoteCount = 1;
   double maxNoteCount = 10;
@@ -120,6 +122,14 @@ class _MainPageState extends State<MainPage> {
                 Navigator.pushNamed(context, '/second');
               },
             ), // ElevatedButton
+            Switch(
+                value: trebleChecked,
+                onChanged: null
+            ),
+            Switch(
+                value: bassChecked,
+                onChanged: null
+            ),
             CustomPaint(
               size: Size(width,height * 0.5),
               painter: previewStaffPainter(staff, noteCountNum, rangeNum, lowestNoteNum),
@@ -171,6 +181,7 @@ class previewStaffPainter extends CustomPainter {
 
     // Staff staff  = Staff();
     List<int> notes = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
+    print(notes);
     staff.draw(canvas,size, notes);
 
 
