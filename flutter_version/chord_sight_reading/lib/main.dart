@@ -124,15 +124,26 @@ class _MainPageState extends State<MainPage> {
             ), // ElevatedButton
             Switch(
                 value: trebleChecked,
-                onChanged: null
+                onChanged: (bool value) {
+                  setState(() {
+                    trebleChecked = value;
+                  });
+                },
             ),
             Switch(
                 value: bassChecked,
-                onChanged: null
+                onChanged: (bool value) {
+                  setState(() {
+                    bassChecked = value;
+                    if(!value){
+                      trebleChecked = true;
+                    }
+                  });
+                },
             ),
             CustomPaint(
               size: Size(width,height * 0.5),
-              painter: previewStaffPainter(staff, noteCountNum, rangeNum, lowestNoteNum),
+              painter: previewStaffPainter(staff, noteCountNum, rangeNum, lowestNoteNum, trebleChecked, bassChecked),
             ),
           ], // <Widget>[]
         ), // Column
@@ -172,26 +183,17 @@ class previewStaffPainter extends CustomPainter {
   final double numNotes;
   final double noteRange;
   final double lowestNote;
+  final bool trebleChecked;
+  final bool bassChecked;
   final Staff staff;
 
-  previewStaffPainter(this.staff, this.numNotes,this.noteRange,this.lowestNote);
+  previewStaffPainter(this.staff, this.numNotes,this.noteRange,this.lowestNote, this.trebleChecked, this.bassChecked);
 
   @override
   void paint(Canvas canvas, Size size) {
 
-    // Staff staff  = Staff();
     List<int> notes = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
-    print(notes);
-    staff.draw(canvas,size, notes);
-
-
-    // Repaints any time its params update
-
-    // should make staff class
-
-
-
-    //for path in path list { draw path }
+    staff.draw(canvas,size, notes, trebleChecked, bassChecked);
 
   }
 

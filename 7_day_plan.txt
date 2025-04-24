@@ -5,8 +5,8 @@ Day 1:
 
 Day 2:
  - convert all java code into dart
- - successfully draw staff and notes
- - get app somewhat working in flutter/dart
+ X - successfully draw staff and notes
+ X - get app somewhat working in flutter/dart
 
 Day 3:
  - improve user interface
