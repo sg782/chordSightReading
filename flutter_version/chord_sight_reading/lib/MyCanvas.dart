@@ -16,6 +16,12 @@ class Staff{
   final double lineSpacing = 30;
   final double noteHeight = 30; // new variable just for clarity
   double wholeNoteAspectRatio = 1.0;
+  double trebleClefAspectRatio = 1.0;
+  double bassClefAspectRatio = 1.0;
+  double trebleClefHeight = 240; // 8x note heihgt
+  double trebleClefWidth = 30;
+  double bassClefHeight = 100;
+  double bassClefWidth = 30;
   double noteWidth = 30.0;
   double noteVerticalSpacing = 30 / 2.0;
   double noteOffsetRatio = 0.85; // this value visually looks good, also somewhat near cos(pi/3) * aspectRatio
@@ -34,11 +40,15 @@ class Staff{
     wholeNoteAspectRatio = wholeNote!.width.toDouble() / wholeNote!.height.toDouble();
     noteWidth = wholeNoteAspectRatio * noteHeight;
 
-    String trebleClefImgPath = 'assets/drawable/trebleClef.png';
+    String trebleClefImgPath = 'assets/drawable/trebleclef.png';
     trebleClef = await getImageData(trebleClefImgPath);
+    trebleClefAspectRatio = trebleClef!.width.toDouble() / trebleClef!.height.toDouble();
+    trebleClefWidth = trebleClefAspectRatio * trebleClefHeight;
 
-    String bassClefImgPath = 'assets/drawable/bassClef.png';
+    String bassClefImgPath = 'assets/drawable/bassclef.png';
     bassClef = await getImageData(bassClefImgPath);
+    bassClefAspectRatio = bassClef!.width.toDouble() / bassClef!.height.toDouble();
+    bassClefWidth = bassClefAspectRatio * bassClefHeight;
 
     return true;
   }
@@ -178,6 +188,14 @@ class Staff{
         double lineY = middleCYPosition - ((i-0.5) * lineSpacing);
         canvas.drawLine(Offset(sidePadding, lineY),Offset(size.width-sidePadding, lineY),paint);
       }
+
+      double trebleClefYPosition = middleCYPosition - trebleClefHeight * (4/5); // adjusted by hand to fit nice
+      double trebleClefXPosition = 0;
+      final src = Rect.fromLTWH(0, 0, trebleClef!.width.toDouble(), trebleClef!.height.toDouble());
+      final dst = Rect.fromLTWH(trebleClefXPosition, trebleClefYPosition, trebleClefWidth, trebleClefHeight); // Resize to 40x40 and draw at (100, 100)
+
+      canvas.drawImageRect(trebleClef!, src, dst, paint);
+
     }
 
     if(bassChecked){
@@ -185,7 +203,18 @@ class Staff{
         double lineY = middleCYPosition + ((i+0.5) * lineSpacing);
         canvas.drawLine(Offset(sidePadding, lineY),Offset(size.width-sidePadding, lineY),paint);
       }
+
+      double bassClefYPosition = middleCYPosition + lineSpacing * (3/2); // adjusted by hand to fit nice
+      double bassClefXPosition = 40;
+
+      final src = Rect.fromLTWH(0, 0, bassClef!.width.toDouble(), bassClef!.height.toDouble());
+      final dst = Rect.fromLTWH(bassClefXPosition, bassClefYPosition, bassClefWidth, bassClefHeight); // Resize to 40x40 and draw at (100, 100)
+
+      canvas.drawImageRect(bassClef!, src, dst, paint);
     }
+
+
+
   }
 
   drawRange(Canvas canvas, Size size){}
