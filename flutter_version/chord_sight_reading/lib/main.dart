@@ -51,7 +51,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     print("here");
     super.initState();
-    staff.loadImage('assets/drawable/wholenote.png').then((_) {
+    staff.loadImages().then((_) {
       setState(() => ready = true);
     });
   }
@@ -127,6 +127,9 @@ class _MainPageState extends State<MainPage> {
                 onChanged: (bool value) {
                   setState(() {
                     trebleChecked = value;
+                    if(!value){
+                      bassChecked = true;
+                    }
                   });
                 },
             ),
@@ -141,10 +144,12 @@ class _MainPageState extends State<MainPage> {
                   });
                 },
             ),
-            CustomPaint(
-              size: Size(width,height * 0.5),
-              painter: previewStaffPainter(staff, noteCountNum, rangeNum, lowestNoteNum, trebleChecked, bassChecked),
-            ),
+            ready?
+              CustomPaint(
+                size: Size(width,height * 0.5),
+                painter: previewStaffPainter(staff, noteCountNum, rangeNum, lowestNoteNum, trebleChecked, bassChecked),
+              )
+            : SizedBox.shrink(),
           ], // <Widget>[]
         ), // Column
       ), // Center

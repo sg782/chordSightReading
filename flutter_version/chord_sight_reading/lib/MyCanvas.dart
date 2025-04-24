@@ -8,6 +8,9 @@ import 'dart:ui' as ui;
 
 class Staff{
   ui.Image? wholeNote;// = loadImageFromFile("assets/drawable/wholenote.png");
+  ui.Image? trebleClef;
+  ui.Image? bassClef;
+
   double middleCYPosition = 0;
   final double middleCValue = 24;
   final double lineSpacing = 30;
@@ -24,18 +27,28 @@ class Staff{
     ..filterQuality = FilterQuality.high;
 
   // turn into loadImages (plural) and just load all necessary images
-  Future<void> loadImage(String assetPath) async {
-    final data = await rootBundle.load(assetPath);
-    final codec = await ui.instantiateImageCodec(
-      data.buffer.asUint8List(),
-      // targetWidth: 50,
-      // targetHeight: 50,
-    );
-    final frame = await codec.getNextFrame();
-    wholeNote = frame.image;
-
+  // return boolean
+  Future<bool> loadImages() async {
+    String wholeNoteImgPath = 'assets/drawable/wholenote.png';
+    wholeNote = await getImageData(wholeNoteImgPath);
     wholeNoteAspectRatio = wholeNote!.width.toDouble() / wholeNote!.height.toDouble();
     noteWidth = wholeNoteAspectRatio * noteHeight;
+
+    String trebleClefImgPath = 'assets/drawable/trebleClef.png';
+    trebleClef = await getImageData(trebleClefImgPath);
+
+    String bassClefImgPath = 'assets/drawable/bassClef.png';
+    bassClef = await getImageData(bassClefImgPath);
+
+    return true;
+  }
+
+  Future<ui.Image> getImageData(String assetPath) async {
+    final data = await rootBundle.load(assetPath);
+    final codec = await ui.instantiateImageCodec(
+        data.buffer.asUint8List());
+    final frame = await codec.getNextFrame();
+    return frame.image;
   }
 
 
@@ -60,25 +73,7 @@ class Staff{
       middleCYPosition = size.height * (2/5);
     }
 
-
-
-
-
-    // crude staff
-
-    if(trebleChecked){
-      for(int i=5;i>0;i--){
-        double lineY = middleCYPosition - ((i-0.5) * lineSpacing);
-        canvas.drawLine(Offset(sidePadding, lineY),Offset(size.width-sidePadding, lineY),paint);
-      }
-    }
-
-    if(bassChecked){
-      for(int i=5;i>0;i--){
-        double lineY = middleCYPosition + ((i+0.5) * lineSpacing);
-        canvas.drawLine(Offset(sidePadding, lineY),Offset(size.width-sidePadding, lineY),paint);
-      }
-    }
+    drawStaves(canvas, size, trebleChecked, bassChecked);
 
 
     List<int> noteOffsets = returnOffsetList(notes);
@@ -174,4 +169,24 @@ class Staff{
       }
     }
   }
+
+  drawStaves(Canvas canvas, Size size, bool trebleChecked, bool bassChecked){
+    double sidePadding = size.width / 15.0;
+
+    if(trebleChecked){
+      for(int i=5;i>0;i--){
+        double lineY = middleCYPosition - ((i-0.5) * lineSpacing);
+        canvas.drawLine(Offset(sidePadding, lineY),Offset(size.width-sidePadding, lineY),paint);
+      }
+    }
+
+    if(bassChecked){
+      for(int i=5;i>0;i--){
+        double lineY = middleCYPosition + ((i+0.5) * lineSpacing);
+        canvas.drawLine(Offset(sidePadding, lineY),Offset(size.width-sidePadding, lineY),paint);
+      }
+    }
+  }
+
+  drawRange(Canvas canvas, Size size){}
 }
