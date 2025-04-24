@@ -9,7 +9,7 @@ void main() {
     initialRoute: '/',
     routes: {
       '/': (context) => const MainPage(),
-      '/second': (context) => const SecondRoute(),
+      '/second': (context) => SecondPage(),
     },
     debugShowCheckedModeBanner: false,
   )); //MaterialApp
@@ -119,7 +119,17 @@ class _MainPageState extends State<MainPage> {
                   foregroundColor: WidgetStateProperty.all(Colors.white)),
               child: const Text('Start!'),
               onPressed: () {
-                Navigator.pushNamed(context, '/second');
+                Navigator.pushNamed(
+                    context,
+                    '/second',
+                    arguments: {
+                      'numNotes': noteCountNum,
+                      'noteRange': rangeNum,
+                      'lowestNote': lowestNoteNum,
+                      'trebleChecked': trebleChecked,
+                      'bassChecked': bassChecked
+                    }
+                );
               },
             ), // ElevatedButton
             Switch(
@@ -147,9 +157,9 @@ class _MainPageState extends State<MainPage> {
             ready?
               CustomPaint(
                 size: Size(width,height * 0.5),
-                painter: previewStaffPainter(staff, noteCountNum, rangeNum, lowestNoteNum, trebleChecked, bassChecked),
+                painter: previewStaffPainter(staff, noteCountNum, rangeNum, lowestNoteNum, trebleChecked, bassChecked, true, true),
               )
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
           ], // <Widget>[]
         ), // Column
       ), // Center
@@ -157,27 +167,88 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-class SecondRoute extends StatelessWidget {
-  const SecondRoute({Key? key}) : super(key: key);
+class SecondPage extends StatefulWidget {
+  const SecondPage({super.key});
+
+  @override
+  State<SecondPage> createState() => SecondPageState();
+}
+
+class SecondPageState extends State<SecondPage> {
+  // const SecondRoute({Key? key}) : super(key: key);
+
+  Staff staff = Staff();
+
+  double numNotes = 0;
+  double noteRange = 0;
+  double lowestNote = 0;
+  bool trebleChecked = false;
+  bool bassChecked = false;
+
+  bool updateVariable = false;
+
+  bool ready = false;
+
+  @override
+  void initState() {
+    print("here");
+    super.initState();
+    staff.loadImages().then((_) {
+      setState(() => ready = true);
+    });
+  }
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.sizeOf(context).width;
+    double height = MediaQuery.sizeOf(context).height;
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+
+    numNotes = args['numNotes'];
+    noteRange = args['noteRange'];
+    lowestNote = args['lowestNote'];
+    trebleChecked = args['trebleChecked'];
+    bassChecked = args['bassChecked'];
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Click Me Page"),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
       ), // AppBar
-      body: Center(
-        child: ElevatedButton(
-          style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(Colors.green),
-              foregroundColor: WidgetStateProperty.all(Colors.white)),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Back!'),
-        ), // ElevatedButton
+      body: Column(
+        children:
+          [
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(Colors.green),
+                  foregroundColor: WidgetStateProperty.all(Colors.white)),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Back!'),
+            ),
+
+            ready?
+                GestureDetector(
+                  child: CustomPaint(
+                  size: Size(width,height * 0.5),
+                  painter: previewStaffPainter(staff, numNotes, noteRange, lowestNote, trebleChecked, bassChecked, false,updateVariable),
+                  ),
+                  onTapDown: (TapDownDetails tapDetails){
+                  setState(() {
+                    updateVariable = !updateVariable;
+                  });
+                  },
+                )
+                : const SizedBox.shrink(),
+          ]
       ), // Center
     ); // Scaffold
   }
@@ -190,15 +261,27 @@ class previewStaffPainter extends CustomPainter {
   final double lowestNote;
   final bool trebleChecked;
   final bool bassChecked;
+  final bool drawingRange;
+  final bool updateVariable; // kinda janky way to update the drawing, but it works and is 
   final Staff staff;
 
-  previewStaffPainter(this.staff, this.numNotes,this.noteRange,this.lowestNote, this.trebleChecked, this.bassChecked);
+
+  previewStaffPainter(this.staff, this.numNotes,this.noteRange,this.lowestNote, this.trebleChecked, this.bassChecked, this.drawingRange, this.updateVariable);
 
   @override
   void paint(Canvas canvas, Size size) {
 
     List<int> notes = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
-    staff.draw(canvas,size, notes, trebleChecked, bassChecked);
+
+    if(drawingRange){
+      int minNote = lowestNote.ceil();
+      int maxNote = min(lowestNote+noteRange, 53).ceil();
+      staff.drawRange(canvas,size, minNote, maxNote);
+
+      return;
+    }
+
+    staff.draw(canvas, size, notes, trebleChecked, bassChecked);
 
   }
 

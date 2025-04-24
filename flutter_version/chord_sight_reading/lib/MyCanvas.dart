@@ -11,19 +11,20 @@ class Staff{
   ui.Image? trebleClef;
   ui.Image? bassClef;
 
+  static const double lineSpacing = 20;
+
   double middleCYPosition = 0;
-  final double middleCValue = 24;
-  final double lineSpacing = 30;
-  final double noteHeight = 30; // new variable just for clarity
+  final double middleCValue = 24 ;
+  final double noteHeight = lineSpacing; // new variable just for clarity
   double wholeNoteAspectRatio = 1.0;
   double trebleClefAspectRatio = 1.0;
   double bassClefAspectRatio = 1.0;
-  double trebleClefHeight = 240; // 8x note heihgt
+  double trebleClefHeight = 8*lineSpacing; // 8x line spacing roughly
   double trebleClefWidth = 30;
-  double bassClefHeight = 100;
+  double bassClefHeight = (10/3) * lineSpacing;
   double bassClefWidth = 30;
   double noteWidth = 30.0;
-  double noteVerticalSpacing = 30 / 2.0;
+  double noteVerticalSpacing = lineSpacing / 2.0;
   double noteOffsetRatio = 0.85; // this value visually looks good, also somewhat near cos(pi/3) * aspectRatio
   double noteLedgerWidthRatio = 1.8; // once again just looks good visually
 
@@ -84,35 +85,9 @@ class Staff{
     }
 
     drawStaves(canvas, size, trebleChecked, bassChecked);
+    drawNotes(canvas, size, notes);
+    drawLedgerLines(canvas, size, notes, trebleChecked, bassChecked);
 
-
-    List<int> noteOffsets = returnOffsetList(notes);
-
-    for(int i=0;i<notes.length;i++){
-      int note = notes[i];
-
-      if (wholeNote != null) {
-        // canvas.drawImage(wholeNote!, Offset(60, note * 10), paint);
-
-        double wholeNoteAspectRatio = wholeNote!.width.toDouble() / wholeNote!.height.toDouble();
-        double noteHeight = lineSpacing; // new variable just for clarity
-        double noteWidth = wholeNoteAspectRatio * noteHeight;
-        double xOffset = noteOffsets[i] * noteOffsetRatio * noteWidth;
-        double noteTopLeftX = (size.width - noteWidth) / 2.0 - xOffset;
-        double noteTopLeftY = (middleCValue - note) * noteVerticalSpacing + middleCYPosition;
-
-        // final paint = Paint();
-        final src = Rect.fromLTWH(0, 0, wholeNote!.width.toDouble(), wholeNote!.height.toDouble());
-        final dst = Rect.fromLTWH(noteTopLeftX, noteTopLeftY, noteWidth, noteHeight); // Resize to 40x40 and draw at (100, 100)
-
-        canvas.drawImageRect(wholeNote!, src, dst, paint);
-
-        drawLedgerLines(canvas, size, notes, trebleChecked, bassChecked);
-      }else{
-        print("not loaded");
-      }
-
-    }
 
   }
 
@@ -217,5 +192,57 @@ class Staff{
 
   }
 
-  drawRange(Canvas canvas, Size size){}
+  drawNotes(Canvas canvas, Size size, List<int> notes){
+    List<int> noteOffsets = returnOffsetList(notes);
+
+    if(wholeNote== null){
+      print("Whole Note Not Loaded");
+      return;
+    }
+
+    for(int i=0;i<notes.length;i++){
+      int note = notes[i];
+
+        // canvas.drawImage(wholeNote!, Offset(60, note * 10), paint);
+
+        double wholeNoteAspectRatio = wholeNote!.width.toDouble() / wholeNote!.height.toDouble();
+        double noteHeight = lineSpacing; // new variable just for clarity
+        double noteWidth = wholeNoteAspectRatio * noteHeight;
+        double xOffset = noteOffsets[i] * noteOffsetRatio * noteWidth;
+        double noteTopLeftX = (size.width - noteWidth) / 2.0 - xOffset;
+        double noteTopLeftY = (middleCValue - note) * noteVerticalSpacing + middleCYPosition;
+
+        final src = Rect.fromLTWH(0, 0, wholeNote!.width.toDouble(), wholeNote!.height.toDouble());
+        final dst = Rect.fromLTWH(noteTopLeftX, noteTopLeftY, noteWidth, noteHeight); // Resize to 40x40 and draw at (100, 100)
+        canvas.drawImageRect(wholeNote!, src, dst, paint);
+
+    }
+
+  }
+
+  drawRange(Canvas canvas, Size size, minNote, maxNote){
+
+    middleCYPosition = size.height * (1/2);
+
+
+    // for now, always display both staves if drawing notes
+    drawStaves(canvas, size, true, true);
+    drawLedgerLines(canvas, size, <int>[minNote,maxNote], true, true);
+
+    final linePaint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 3
+      ..filterQuality = FilterQuality.high;
+
+    drawNotes(canvas, size, <int>[minNote,maxNote]);
+
+    double verticalLineX = size.width/2 - 50;
+    double maxY = (middleCValue - minNote  + 3) * noteVerticalSpacing + middleCYPosition;
+    double minY = (middleCValue - maxNote - 1) * noteVerticalSpacing + middleCYPosition;
+    canvas.drawLine(Offset(verticalLineX, minY), Offset(verticalLineX, maxY), linePaint);
+    canvas.drawLine(Offset(verticalLineX, minY), Offset(verticalLineX + noteWidth / 2, minY), linePaint);
+    canvas.drawLine(Offset(verticalLineX, maxY), Offset(verticalLineX + noteWidth / 2, maxY), linePaint);
+
+
+  }
 }

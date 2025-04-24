@@ -25,3 +25,7 @@ Day 7:
  - begin work to publish to Apple store
  
  
+
+draw range
+draw accidentals
+make new page on click change
