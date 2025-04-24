@@ -121,12 +121,14 @@ class Staff{
     int minNote = notes.reduce((a, b) => a < b ? a : b);
     int maxNote = notes.reduce((a, b) => a > b ? a : b);
 
-    int highA = 36;
+    int highAValue = 36;
+    int lowEValue = 12;
 
     // the uncovered case in either staff
     if(notes.contains(middleCValue.ceil())){
       canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), paint);
     }
+
     if(!trebleChecked && maxNote >= 26){
       int distance = (maxNote - middleCValue).ceil();
       int lineCount = 1+ (distance / 2).floor();
@@ -136,18 +138,40 @@ class Staff{
         canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), paint);
 
       }
-    }else if(maxNote >= highA){
-      int distance = (maxNote - highA).ceil();
+    }else if(trebleChecked && maxNote >= highAValue){
+      int distance = (maxNote - highAValue).ceil();
       int lineCount = 1+ (distance / 2).floor();
 
+      double highAValueYPosition = middleCYPosition - (highAValue - middleCValue) * noteVerticalSpacing;
+
       for(int i=0;i<lineCount;i++){
-        ledgerY = middleCYPosition - noteHeight * (i - 0.5 - 10);
+        ledgerY = highAValueYPosition - noteHeight * (i - 0.5);
         canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), paint);
 
       }
     }
-    if(!bassChecked && minNote <= 22){
 
+    if(!bassChecked && minNote <= 22){
+      int distance = (middleCValue - minNote).ceil();
+      int lineCount = 1+ (distance / 2).floor();
+
+      for(int i=0;i<lineCount;i++){
+        ledgerY = middleCYPosition + noteHeight * (i + 0.5);
+        canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), paint);
+      }
+
+    }else if(bassChecked && minNote <= lowEValue){
+      
+      int distance = (lowEValue - minNote).ceil();
+      int lineCount = 1+ (distance / 2).floor();
+
+      double lowEYPosition = middleCYPosition - (lowEValue - middleCValue) * noteVerticalSpacing;
+
+
+      for(int i=0;i<lineCount;i++){
+        ledgerY = lowEYPosition + noteHeight * (i + 0.5);
+        canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), paint);
+      }
     }
   }
 }
