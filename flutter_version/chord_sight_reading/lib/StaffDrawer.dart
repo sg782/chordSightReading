@@ -6,12 +6,16 @@ import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:ui' as ui;
 
+import 'dart:ui';
+
+
+
 class Staff{
   ui.Image? wholeNote;// = loadImageFromFile("assets/drawable/wholenote.png");
   ui.Image? trebleClef;
   ui.Image? bassClef;
 
-  static const double lineSpacing = 20;
+  static const double lineSpacing = 15;
 
   double middleCYPosition = 0;
   final double middleCValue = 24 ;

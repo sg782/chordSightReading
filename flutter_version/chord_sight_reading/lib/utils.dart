@@ -53,6 +53,141 @@ Future<ui.Image> loadImageFromFile(String path) async {
   return frame.image;
 }
 
+
+/*
+
+Accidentals will come in the next update
+It requires too many inputs (how many accidentals, which accidentals, specific notes, etc) for me to want to do when trying to make a polished project
+
+ */
+// List<int> returnAccidentalsOffset(List<int> acc, List<int> offset,List<int> notes){//offsets the accidentals tied to each note
+// int [] array = new int[acc.length];
+// int len = notes.length;
+// double[][] safeBound = {{1.3,2.4},{-1.1,2.2},{0,0},{-1.6,1.6},{-1,1}}; //{lower,higher , width} (width will be potentially added idk yet)
+// //^ use the actual size of the notes to be more specific with the safebound
+// System.out.println("Qtest33Notes:"+ Arrays.toString(newNoteList));
+// System.out.println("Qtest33acc:"+ Arrays.toString(acc));
+//
+// //next 17ish lines weed out the naturals, can add an if statement later on to toggle this if naturals are to be shown.
+// int NattyCount = 0;
+// for (int i = 0; i < len; i++) {
+// if(acc[i]==0){
+// NattyCount+=1;
+// }
+// }
+// int newlen = len - NattyCount;
+// int[] cleanAccArray = new int[newlen];
+// int[] cleanNoteArray = new int[newlen];
+// int k = 0;
+// for (int i = 0; i < len; i++) {
+// if(acc[i]!=0){
+// cleanAccArray[k] = acc[i];
+// cleanNoteArray[k] = notes[i];
+// k+=1;
+// }
+// }
+// System.out.println("Qtest33:" + Arrays.toString(cleanAccArray) + Arrays.toString(cleanNoteArray));
+// //
+//
+// for(int i = 0;i<newlen;i++){
+// boolean bottomTouching = false;
+// boolean topTouching = false;
+// double accUpperBound = notes[i] + safeBound[acc[i]+2][1];
+// double accLowerBound = notes[i] + safeBound[acc[i]+2][0];
+// if(i<newlen-1){//Ignores the top note
+// for(int j = i+1;j<newlen;j++){//Check if the top is touching
+// if(accUpperBound > cleanNoteArray[j] + safeBound[cleanAccArray[j]+2][0]){//if The top of the current acc is above the bottom of the next acc (touching)
+// topTouching = true;
+// }
+// }
+// }
+// if(i>0){//Ignores the bottom note
+// for(int j = newlen-1;j> i;j--){//Check if the bottom is touching
+// if(accLowerBound < cleanNoteArray[j] + safeBound[cleanAccArray[j]+2][1]){//if The bottom of the current acc is below the top of the next acc (touching)
+// topTouching = true;
+// }
+// }
+// }
+// if(!bottomTouching && !topTouching){
+//
+// }
+// System.out.print("Qtest33:"+bottomTouching+topTouching);
+//
+//
+// //for each non natural accidental
+// //check above accidental to see if it is clear
+// //check below accidental to see if it is clear
+// //it it is completely clear, give it a zero offset and remove it from the list
+// }
+//
+//
+//
+//
+//
+// for(int i = 0;i<len;i++){
+// int j = i;
+// }
+// /*
+//         for(int i = 0;i<newlen;i++) { //for each accidental
+//             boolean LowTouching = false;
+//             boolean HighTouching = false;
+//             double accUpperBound = notes[i] + safeBound[acc[i]+2][1];
+//             double accLowerBound = notes[i] + safeBound[acc[i]+2][0];
+//             if(i<newlen-1){ //if not the top note
+//                 for(int j = i+1;j<newlen;j++){//check every accidental above the current one
+//                     if(accUpperBound < cleanNoteArray[j] + safeBound[cleanAccArray[j]+2][0]){ //if accupperbound < the next acclowerbound
+//                         HighTouching = false;
+//
+//                     }else{
+//                         HighTouching = true;
+//                         break; //if any accidentals above the original are touching
+//                     }
+//                 }
+//             }
+//             if(i>0){ //if not the bottom note
+//                 for(int j = 1;j<i;j++){//check every accidental below the current one
+//                     if(accLowerBound > cleanNoteArray[j] + safeBound[cleanAccArray[j]+2][1]){ //if acclowerbound > the previous accupperbound
+//                         LowTouching = false;
+//                     }else{
+//                         LowTouching = true;
+//                         break; //if any accidentals above the original are touching
+//                     }
+//                 }
+//             }
+//
+//             if(!LowTouching && !HighTouching){
+//                 array[i] = 0;
+//                 System.out.println("Qtest33:"+ cleanNoteArray[i] + ";"+LowTouching + HighTouching);
+//             }else{
+//                 array[i] = -1;
+//                 System.out.println("Qtest33:"+ cleanNoteArray[i]  + ";"+LowTouching + HighTouching);
+//             }
+//         }*/
+// return(array);
+// }
+
+// List<int> returnAccidentals(int n,List<bool> validAccidentals){
+//   List<int> allowedList = List<int>.filled(5, 0); //5 possible accidentals
+//
+//   for(int i = 0; i<validAccidentals.length;i++){
+//     if(validAccidentals[i]){
+//       allowedList[i] = i-2;//-2 is regarded as double flat
+//     }else{
+//       allowedList[i] = 3; // if there is a 3 in the array, it will be ignored
+//     }
+//   }
+//   int[] accidentals = new int[n];
+//   for(int i = 0;i<n;i++){
+//     int j = 3;
+//     while(j==3){ //in theory removes the threes
+//     j = allowedList[(int)(5*Math.random())];
+//   }
+//   accidentals[i] = j;
+//   }
+//   return(accidentals);
+// }
+
+
 final Map<int, String> pianoNotesMap = {
   1: "A0",
   2: "B0",

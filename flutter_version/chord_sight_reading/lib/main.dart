@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'package:chord_sight_reading/MyCanvas.dart';
+import 'package:chord_sight_reading/StaffDrawer.dart';
+import 'package:chord_sight_reading/SoundTest.dart';
 import 'package:chord_sight_reading/utils.dart';
 import 'package:flutter/material.dart';
 // function to trigger build when the app is run
@@ -10,6 +11,7 @@ void main() {
     routes: {
       '/': (context) => const MainPage(),
       '/second': (context) => SecondPage(),
+      // '/soundTest': (context) => SoundTest(),
     },
     debugShowCheckedModeBanner: false,
   )); //MaterialApp
@@ -67,52 +69,119 @@ class _MainPageState extends State<MainPage> {
     double sidePadding = width /10.0;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Front Page'),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-      ), // AppBar
-      body: Center(
+
+      body: SafeArea(
+
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Slider(
-              value: noteCountNum,
-              min: minNoteCount,
-              max: maxNoteCount,
-              divisions: (maxNoteCount - minNoteCount).ceil(),
-              label: noteCountNum.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  noteCountNum = value;
-                });
-              },
+            const Text("Choose Your Variables: "),
+            Row(
+              children:
+                  [
+                  const Text("Num Notes: "),
+                  Expanded(
+                    child: Slider(
+                      value: noteCountNum,
+                      min: minNoteCount,
+                      max: maxNoteCount,
+                      divisions: (maxNoteCount - minNoteCount).ceil(),
+                      label: noteCountNum.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          noteCountNum = value;
+                        });
+                      },
+                    ),
+                  ),
+                    Text(noteCountNum.toInt().toString()),
+                ]
             ),
-            Slider(
-              value: rangeNum,
-              min: minRangeNum,
-              max: maxRangeNum,
-              divisions: (maxRangeNum - minRangeNum).ceil(),
-              label: rangeNum.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  rangeNum = value;
-                });
-              },
+
+            Row(
+              children: [
+                Text("Note Range: "),
+                  Expanded(
+                    child: Slider(
+                      value: rangeNum,
+                      min: minRangeNum,
+                      max: maxRangeNum,
+                      divisions: (maxRangeNum - minRangeNum).ceil(),
+                      label: rangeNum.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          rangeNum = value;
+                        });
+                      },
+                    )
+                  ),
+                Text(rangeNum.toInt().toString()),
+              ],
             ),
-            Slider(
-              value: lowestNoteNum,
-              min: minNoteNum,
-              max: maxNoteNum,
-              divisions: (maxNoteNum - minNoteNum).ceil(),
-              label: lowestNoteNum.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  lowestNoteNum = value;
-                });
-              },
+            Row(
+              children: [
+                Text("Lowest Note: "),
+                Expanded(
+                    child: Slider(
+                    value: lowestNoteNum,
+                    min: minNoteNum,
+                    max: maxNoteNum,
+                    divisions: (maxNoteNum - minNoteNum).ceil(),
+                    label: lowestNoteNum.round().toString(),
+                    onChanged: (double value) {
+                      setState(() {
+                        lowestNoteNum = value;
+                      });
+                    },
+                  )
+                ),
+                Text(pianoNotesMap[lowestNoteNum.toInt()]!),
+
+              ],
             ),
-            
+
+            Row(
+              children: [
+                Text("Show Treble Clef: "),
+                Switch(
+                  value: trebleChecked,
+                  onChanged: (bool value) {
+                    setState(() {
+                      trebleChecked = value;
+                      if(!value){
+                        bassChecked = true;
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text("Show Bass Clef: "),
+                Switch(
+                  value: bassChecked,
+                  onChanged: (bool value) {
+                    setState(() {
+                      bassChecked = value;
+                      if(!value){
+                        trebleChecked = true;
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+
+
+
+            ready?
+              CustomPaint(
+                size: Size(width,height * 0.5),
+                painter: previewStaffPainter(staff, noteCountNum, rangeNum, lowestNoteNum, trebleChecked, bassChecked, true, true),
+              )
+            : const SizedBox.shrink(),
+
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all(Colors.green),
@@ -132,34 +201,6 @@ class _MainPageState extends State<MainPage> {
                 );
               },
             ), // ElevatedButton
-            Switch(
-                value: trebleChecked,
-                onChanged: (bool value) {
-                  setState(() {
-                    trebleChecked = value;
-                    if(!value){
-                      bassChecked = true;
-                    }
-                  });
-                },
-            ),
-            Switch(
-                value: bassChecked,
-                onChanged: (bool value) {
-                  setState(() {
-                    bassChecked = value;
-                    if(!value){
-                      trebleChecked = true;
-                    }
-                  });
-                },
-            ),
-            ready?
-              CustomPaint(
-                size: Size(width,height * 0.5),
-                painter: previewStaffPainter(staff, noteCountNum, rangeNum, lowestNoteNum, trebleChecked, bassChecked, true, true),
-              )
-            : const SizedBox.shrink(),
           ], // <Widget>[]
         ), // Column
       ), // Center
@@ -217,39 +258,40 @@ class SecondPageState extends State<SecondPage> {
 
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Click Me Page"),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-      ), // AppBar
-      body: Column(
-        children:
-          [
-            ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(Colors.green),
-                  foregroundColor: WidgetStateProperty.all(Colors.white)),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Back!'),
-            ),
 
-            ready?
-                GestureDetector(
-                  child: CustomPaint(
+      body:
+        SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:
+            [
+              ready?
+              GestureDetector(
+                child: CustomPaint(
                   size: Size(width,height * 0.5),
                   painter: previewStaffPainter(staff, numNotes, noteRange, lowestNote, trebleChecked, bassChecked, false,updateVariable),
-                  ),
-                  onTapDown: (TapDownDetails tapDetails){
+                ),
+                onTapDown: (TapDownDetails tapDetails){
                   setState(() {
                     updateVariable = !updateVariable;
                   });
-                  },
-                )
-                : const SizedBox.shrink(),
-          ]
-      ), // Center
+                },
+              )
+                  : const SizedBox.shrink(),
+
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(Colors.green),
+                    foregroundColor: WidgetStateProperty.all(Colors.white)),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Back!'),
+              ),
+            ]
+        ),
+        )
+// Center
     ); // Scaffold
   }
 }
@@ -262,7 +304,7 @@ class previewStaffPainter extends CustomPainter {
   final bool trebleChecked;
   final bool bassChecked;
   final bool drawingRange;
-  final bool updateVariable; // kinda janky way to update the drawing, but it works and is 
+  final bool updateVariable; // kinda janky way to update the drawing, but it works and is
   final Staff staff;
 
 
