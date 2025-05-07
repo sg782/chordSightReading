@@ -250,3 +250,40 @@ class Staff{
 
   }
 }
+
+class PreviewStaffPainter extends CustomPainter {
+  final double numNotes;
+  final double noteRange;
+  final double lowestNote;
+  final bool trebleChecked;
+  final bool bassChecked;
+  final bool drawingRange;
+  final bool updateVariable; // kinda janky way to update the drawing, but it works and is
+  final Staff staff;
+
+
+  PreviewStaffPainter(this.staff, this.numNotes,this.noteRange,this.lowestNote, this.trebleChecked, this.bassChecked, this.drawingRange, this.updateVariable);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+
+    List<int> notes = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
+
+    if(drawingRange){
+      int minNote = lowestNote.ceil();
+      int maxNote = min(lowestNote+noteRange, 53).ceil();
+      staff.drawRange(canvas,size, minNote, maxNote);
+
+      return;
+    }
+
+    staff.draw(canvas, size, notes, trebleChecked, bassChecked);
+
+  }
+
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true; // Ensures the canvas is redrawn with each update
+  }
+}
