@@ -40,6 +40,30 @@ class _TestAudioCaptureState extends State<TestAudioCapture> {
     await _plugin.stop();
   }
 
+  int argmax(List<double> list) {
+    if (list.isEmpty) {
+      throw ArgumentError('List is empty');
+    }
+
+    double maxVal = list[0];
+    int maxIndex = 0;
+
+    for (int i = 1; i < list.length; i++) {
+      if (list[i] > maxVal) {
+        maxVal = list[i];
+        maxIndex = i;
+      }
+    }
+
+    return maxIndex;
+  }
+  
+  void get_max(data){
+    int max = argmax(data);
+    print(max);
+  }
+
+  int dominantPitch = -1;
   List<double> _waveformBuffer = [];
 
   void listener(dynamic obj) {
@@ -53,6 +77,8 @@ class _TestAudioCaptureState extends State<TestAudioCapture> {
       return sqrt(real * real + imag * imag);
     }).toList();
 
+
+
     // final freq_list = List<double>.from(freq);
 
     // Keep only most recent 2048 samples
@@ -61,7 +87,11 @@ class _TestAudioCaptureState extends State<TestAudioCapture> {
       _waveformBuffer.removeRange(0, _waveformBuffer.length - 2048);
     }
 
-    setState(() {}); // re-render waveform
+    setState(() {
+      int dominantIdx = argmax(magnitudes);
+
+      dominantPitch = (dominantIdx * 16000 / samples.length).toInt();
+    }); // re-render waveform
   }
 
   void onError(Object e) {
@@ -76,6 +106,7 @@ class _TestAudioCaptureState extends State<TestAudioCapture> {
           title: const Text('Flutter Audio Capture Plugin'),
         ),
         body: Column(children: [
+          Text("Argmax: " + dominantPitch.toString()),
           Expanded(
               child: Row(
                 children: [
