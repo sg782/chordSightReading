@@ -3,6 +3,7 @@ import 'package:chord_sight_reading/utils.dart';
 import 'package:chord_sight_reading/app_settings.dart';
 import 'package:chord_sight_reading/app_theme.dart'; // Add this
 
+
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -38,6 +39,8 @@ class _SettingsPageState extends State<SettingsPage> {
       setState(() => ready = true);
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +193,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
 
               const SizedBox(height: 30),
+
+
 
               ElevatedButton(
                 style: ElevatedButton.styleFrom(

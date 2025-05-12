@@ -49,6 +49,20 @@ class EntryPage extends StatelessWidget {
                   style: style.buttonText,
                 ),
               ),
+
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/audio_cap');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: style.accent,
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+                ),
+                child: Text(
+                  'Audio',
+                  style: style.buttonText,
+                ),
+              ),
             ],
           ),
         ),

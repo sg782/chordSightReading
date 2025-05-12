@@ -1,6 +1,7 @@
 import 'package:chord_sight_reading/entry_page.dart';
 import 'package:chord_sight_reading/settings_page.dart';
 import 'package:chord_sight_reading/trainer_page.dart';
+import 'package:chord_sight_reading/test_audio_capture.dart';
 
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ void main() {
       '/': (context) => const EntryPage(),
       '/settings': (context) => const SettingsPage(),
       '/second': (context) => const TrainingPage(),
+      '/audio_cap': (context) => TestAudioCapture(),
       // '/soundTest': (context) => SoundTest(),
     },
     debugShowCheckedModeBanner: false,
