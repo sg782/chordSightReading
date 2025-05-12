@@ -7,6 +7,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:chord_sight_reading/waveform_painter.dart';
 
+import 'package:chord_sight_reading/utils.dart';
+
+
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -40,28 +43,9 @@ class _TestAudioCaptureState extends State<TestAudioCapture> {
     await _plugin.stop();
   }
 
-  int argmax(List<double> list) {
-    if (list.isEmpty) {
-      throw ArgumentError('List is empty');
-    }
 
-    double maxVal = list[0];
-    int maxIndex = 0;
-
-    for (int i = 1; i < list.length; i++) {
-      if (list[i] > maxVal) {
-        maxVal = list[i];
-        maxIndex = i;
-      }
-    }
-
-    return maxIndex;
-  }
   
-  void get_max(data){
-    int max = argmax(data);
-    print(max);
-  }
+
 
   int dominantPitch = -1;
   List<double> _waveformBuffer = [];
@@ -78,6 +62,9 @@ class _TestAudioCaptureState extends State<TestAudioCapture> {
     }).toList();
 
 
+    List<int> topKDominantFrequencies = topKFrequencies(magnitudes, 3);
+
+    print(topKDominantFrequencies);
 
     // final freq_list = List<double>.from(freq);
 
@@ -86,6 +73,8 @@ class _TestAudioCaptureState extends State<TestAudioCapture> {
     if (_waveformBuffer.length > 2048) {
       _waveformBuffer.removeRange(0, _waveformBuffer.length - 2048);
     }
+
+
 
     setState(() {
       int dominantIdx = argmax(magnitudes);

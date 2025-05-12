@@ -53,6 +53,36 @@ Future<ui.Image> loadImageFromFile(String path) async {
   return frame.image;
 }
 
+int argmax(List<double> list) {
+  if (list.isEmpty) {
+    throw ArgumentError('List is empty');
+  }
+
+  double maxVal = list[0];
+  int maxIndex = 0;
+
+  for (int i = 1; i < list.length; i++) {
+    if (list[i] > maxVal) {
+      maxVal = list[i];
+      maxIndex = i;
+    }
+  }
+
+  return maxIndex;
+}
+
+List<int> topKFrequencies(List<double> data, int k) {
+  if (k <= 0 || k > data.length) {
+    throw ArgumentError('Invalid value for k');
+  }
+  final indexed = List.generate(data.length, (i) => MapEntry(i, data[i]));
+
+  // Sort by magnitude descending
+  indexed.sort((a, b) => b.value.compareTo(a.value));
+
+  // Return the top K indices
+  return indexed.take(k).map((e) => e.key).toList();
+}
 
 /*
 
