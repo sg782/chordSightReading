@@ -15,7 +15,7 @@ class TestAudioCapture extends StatefulWidget {
 }
 
 class _TestAudioCaptureState extends State<TestAudioCapture> {
-  NoteListener noteListener = NoteListener();
+  NoteListener noteListener = NoteListener(5); // take top 5 notes
 
   @override
   void initState() {

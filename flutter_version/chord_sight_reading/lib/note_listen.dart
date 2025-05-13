@@ -14,6 +14,11 @@ import 'package:chord_sight_reading/utils.dart';
 import 'dart:math';
 import 'dart:typed_data';
 class NoteListener {
+
+  final int numNotes;
+
+  NoteListener(this.numNotes);
+
   FlutterAudioCapture _cap = new FlutterAudioCapture();
 
 
@@ -54,8 +59,8 @@ class NoteListener {
     final croppedMagnitudes = magnitudes.sublist(0, magnitudes.length ~/ 2);
 
 
-    int k = 15; // number of frequencies to take
-    int n = 5;  // number of final notes to output
+    int k = 2 * numNotes + 3; // number of frequencies to take. Random formula for it
+    int n = numNotes;  // number of final notes to output
     List<int> topKDominantFrequencies = topKFrequencies(croppedMagnitudes, k);
 
     double multiplier =  (sampleRate / samples.length);

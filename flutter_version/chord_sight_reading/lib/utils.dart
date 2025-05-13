@@ -170,6 +170,11 @@ List<double> noteFrequencies = [
   7902.13, 8000.00
 ];
 
+final Map<int, int> whiteKeyIndexToNoteIndex = {
+  for (final entry in pianoNotesMap.entries)
+    entry.key: noteNames.indexOf(entry.value)
+};
+
 
 int binSearchNearest(List<double> values, double target) {
   int l = 0;

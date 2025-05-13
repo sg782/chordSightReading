@@ -201,7 +201,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   painter: PreviewStaffPainter(
                     staff,
                     true,
-                    true,
+                    [], // just for now
                   ),
                 ),
 

@@ -11,6 +11,15 @@ import 'package:chord_sight_reading/app_settings.dart';
 import 'dart:ui';
 
 
+/*
+Split into two different classes
+
+range drawing and actual note drawing
+to keep logic simple
+
+
+ */
+
 
 class Staff{
   ui.Image? wholeNote;// = loadImageFromFile("assets/drawable/wholenote.png");
@@ -262,14 +271,14 @@ class PreviewStaffPainter extends CustomPainter {
 
   bool updateState = true;
 
-  List<int> notes = [];
+  final List<int> notes;
 
   final bool drawingRange;
-  final bool updateVariable; // kinda janky way to update the drawing, but it works and is
+  // final bool updateVariable; // kinda janky way to update the drawing, but it works and is
   final Staff staff;
 
 
-  PreviewStaffPainter(this.staff, this.drawingRange, this.updateVariable);
+  PreviewStaffPainter(this.staff, this.drawingRange, this.notes);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -282,7 +291,7 @@ class PreviewStaffPainter extends CustomPainter {
     //   updateState = updateVariable;
     // }
 
-      notes = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
+      // notes = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
 
 
     if(drawingRange){
@@ -299,7 +308,8 @@ class PreviewStaffPainter extends CustomPainter {
 
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true; // Ensures the canvas is redrawn with each update
+  // this doesnt seem to impact repaints
+  bool shouldRepaint(covariant PreviewStaffPainter oldDelegate) {
+    return true;//oldDelegate.updateVariable != updateVariable;
   }
 }

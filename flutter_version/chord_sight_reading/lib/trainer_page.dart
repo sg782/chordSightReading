@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:chord_sight_reading/note_listen.dart';
 import 'package:chord_sight_reading/utils.dart';
 
+import 'package:collection/collection.dart';
+
 class TrainingPage extends StatefulWidget {
   const TrainingPage({super.key});
 
@@ -17,20 +19,25 @@ class TrainingPage extends StatefulWidget {
 class TrainingPageState extends State<TrainingPage> {
   Staff staff = Staff();
 
-  double numNotes = 0;
-  double noteRange = 0;
-  double lowestNote = 0;
-  bool trebleChecked = false;
-  bool bassChecked = false;
+  double numNotes = AppSettings().numNotes;
+  double noteRange = AppSettings().noteRange;
+  double lowestNote = AppSettings().lowestNote;
+  bool trebleChecked = AppSettings().useTrebleClef;
+  bool bassChecked = AppSettings().useBassClef;
 
-  bool updateVariable = false;
   bool ready = false;
+  List<int> notesDisplay = returnNoteArray(AppSettings().numNotes.toInt(), AppSettings().noteRange.toInt(), AppSettings().lowestNote.toInt());
+  List<int> notesHeard = [];
 
-  NoteListener noteListener = NoteListener();
 
+
+  NoteListener noteListener = NoteListener(AppSettings().numNotes.toInt());
+  late final VoidCallback _noteEventListener;
 
   @override
   void initState() {
+
+    print(whiteKeyIndexToNoteIndex.toString());
     super.initState();
     staff.loadImages().then((_) {
       setState(() => ready = true);
@@ -39,6 +46,35 @@ class TrainingPageState extends State<TrainingPage> {
     if(AppSettings().useNoteListener){
       initListener();
     }
+
+
+    _noteEventListener = () {
+      setState(() {
+        notesHeard = noteListener.latestSamples.value.toList();
+
+        List<int> displayNotesIdx = notesDisplay.map((i) => whiteKeyIndexToNoteIndex[i] ?? -1).toList();
+
+        print(displayNotesIdx);
+
+        List<int> notesHeardSorted = [...notesHeard]..sort();
+        List<int> displayNotesIdxSorted = [...displayNotesIdx]..sort();
+
+        if(ListEquality().equals(notesHeardSorted,displayNotesIdxSorted)){
+          notesDisplay = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
+          print("equal!!!");
+        }
+
+      });
+    };
+
+    noteListener.latestSamples.addListener(_noteEventListener);
+
+  }
+
+  @override
+  void dispose() {
+    noteListener.latestSamples.removeListener(_noteEventListener);
+    super.dispose();
   }
 
   Future <void> initListener() async {
@@ -54,11 +90,13 @@ class TrainingPageState extends State<TrainingPage> {
     double height = MediaQuery.sizeOf(context).height;
 
     // Load settings from global singleton
-    numNotes = AppSettings().numNotes;
-    noteRange = AppSettings().noteRange;
-    lowestNote = AppSettings().lowestNote;
-    trebleChecked = AppSettings().useTrebleClef;
-    bassChecked = AppSettings().useBassClef;
+    // numNotes = AppSettings().numNotes;
+    // noteRange = AppSettings().noteRange;
+    // lowestNote = AppSettings().lowestNote;
+    // trebleChecked = AppSettings().useTrebleClef;
+    // bassChecked = AppSettings().useBassClef;
+
+    // make the notes out here
 
     return Scaffold(
       backgroundColor: style.background,
@@ -68,30 +106,38 @@ class TrainingPageState extends State<TrainingPage> {
           children: [
             ready
                 ? GestureDetector(
-              child: CustomPaint(
-                size: Size(width, height * 0.5),
-                painter: PreviewStaffPainter(
-                  staff,
-                  false,
-                  updateVariable,
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  size: Size(width, height * 0.5),
+                  painter: PreviewStaffPainter(
+                    staff,
+                    false,
+                    notesDisplay,
+                  ),
                 ),
               ),
               onTapDown: (TapDownDetails tapDetails) {
                 setState(() {
-                  updateVariable = !updateVariable;
+                  notesDisplay = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
                 });
               },
             )
                 : const SizedBox.shrink(),
 
+            // AppSettings().useNoteListener
+            //   ? ValueListenableBuilder<List<int>>(
+            //       valueListenable: noteListener.latestSamples,
+            //       builder: (context, notes, _) {
+            //         // setState(() {
+            //         //   currentNotes = notes.toList();
+            //         // });
+            //       return Text('Current Note: ${notes.map((i) => noteNames[i]).toList()}');
+            //       },
+            //       )
+            //   : const Text("Not Listening"),
             AppSettings().useNoteListener
-              ? ValueListenableBuilder<List<int>>(
-                  valueListenable: noteListener.latestSamples,
-                  builder: (context, notes, _) {
-                  return Text('Current Note: ${notes.map((i) => noteNames[i]).toList()}');
-                  },
-                  )
-              : const Text("Not Listening"),
+              ?   Text(notesHeard.toString())
+                : const Text("Not Listening"),
 
             const SizedBox(height: 30),
 
