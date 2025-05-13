@@ -10,4 +10,5 @@ class AppSettings {
   double lowestNote = 21;
   bool useTrebleClef = true;
   bool useBassClef = false;
+  bool useNoteListener = true;
 }

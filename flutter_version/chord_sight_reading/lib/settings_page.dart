@@ -14,20 +14,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  double noteCountNum = 5;
+  double noteCountNum = AppSettings().numNotes;
   double minNoteCount = 1;
   double maxNoteCount = 10;
 
-  double rangeNum = 10;
+  double rangeNum = AppSettings().noteRange;
   double minRangeNum = 2;
   double maxRangeNum = 52;
 
-  double lowestNoteNum = 25;
+  double lowestNoteNum = AppSettings().lowestNote;
   double minNoteNum = 1;
   double maxNoteNum = 52;
 
-  bool trebleChecked = true;
-  bool bassChecked = false;
+  bool trebleChecked = AppSettings().useTrebleClef;
+  bool bassChecked = AppSettings().useBassClef;
+
+  bool useNoteListener = AppSettings().useNoteListener;
 
   Staff staff = Staff();
   bool ready = false;
@@ -174,6 +176,22 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Use Note Listener:", style: style.text),
+                  Switch(
+                    activeColor: style.primary,
+                    value: useNoteListener,
+                    onChanged: (bool value) {
+                      setState(() {
+                        useNoteListener = value;
+                        AppSettings().useNoteListener = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
 
               const SizedBox(height: 10),
 
@@ -182,11 +200,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   size: Size(width, height * 0.5),
                   painter: PreviewStaffPainter(
                     staff,
-                    noteCountNum,
-                    rangeNum,
-                    lowestNoteNum,
-                    trebleChecked,
-                    bassChecked,
                     true,
                     true,
                   ),

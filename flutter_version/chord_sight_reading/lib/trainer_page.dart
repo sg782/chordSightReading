@@ -1,114 +1,11 @@
-// import 'package:chord_sight_reading/StaffDrawer.dart';
-// import 'package:chord_sight_reading/app_settings.dart';
-//
-// import 'package:flutter/material.dart';
-//
-//
-//
-//
-// class TrainingPage extends StatefulWidget {
-//   const TrainingPage({super.key});
-//
-//   @override
-//   State<TrainingPage> createState() => TrainingPageState();
-// }
-//
-// class TrainingPageState extends State<TrainingPage> {
-//   // const SecondRoute({Key? key}) : super(key: key);
-//
-//   Staff staff = Staff();
-//
-//   double numNotes = 0;
-//   double noteRange = 0;
-//   double lowestNote = 0;
-//   bool trebleChecked = false;
-//   bool bassChecked = false;
-//
-//   bool updateVariable = false;
-//
-//   bool ready = false;
-//
-//   @override
-//   void initState() {
-//     print("here");
-//     super.initState();
-//     staff.loadImages().then((_) {
-//       setState(() => ready = true);
-//     });
-//   }
-//
-//
-//
-//
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     double width = MediaQuery.sizeOf(context).width;
-//     double height = MediaQuery.sizeOf(context).height;
-//     // final args = ModalRoute.of(context)!.settings.arguments as Map;
-//     //
-//     //
-//     //
-//     // numNotes = args['numNotes'];
-//     // noteRange = args['noteRange'];
-//     // lowestNote = args['lowestNote'];
-//     // trebleChecked = args['trebleChecked'];
-//     // bassChecked = args['bassChecked'];
-//
-//     numNotes = AppSettings().numNotes;
-//     noteRange = AppSettings().noteRange;
-//     lowestNote = AppSettings().lowestNote;
-//
-//     trebleChecked = AppSettings().useTrebleClef;
-//     bassChecked = AppSettings().useBassClef;
-//
-//
-//     return Scaffold(
-//
-//         body:
-//         SafeArea(
-//           child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children:
-//               [
-//                 ready?
-//                 GestureDetector(
-//                   child: CustomPaint(
-//                     size: Size(width,height * 0.5),
-//                     painter: PreviewStaffPainter(staff, numNotes, noteRange, lowestNote, trebleChecked, bassChecked, false,updateVariable),
-//                   ),
-//                   onTapDown: (TapDownDetails tapDetails){
-//                     setState(() {
-//                       updateVariable = !updateVariable;
-//                     });
-//                   },
-//                 )
-//                     : const SizedBox.shrink(),
-//
-//                 ElevatedButton(
-//                   style: ButtonStyle(
-//                       backgroundColor: WidgetStateProperty.all(Colors.black),
-//                       foregroundColor: WidgetStateProperty.all(Colors.white)),
-//                   onPressed: () {
-//                     Navigator.pop(context);
-//                   },
-//                   child: const Text('Back!'),
-//                 ),
-//               ]
-//           ),
-//         )
-// // Center
-//     ); // Scaffold
-//   }
-// }
-//
-
 import 'package:chord_sight_reading/StaffDrawer.dart';
 import 'package:chord_sight_reading/app_settings.dart';
 import 'package:chord_sight_reading/app_theme.dart'; // Add this
 
 import 'package:flutter/material.dart';
+
+import 'package:chord_sight_reading/note_listen.dart';
+import 'package:chord_sight_reading/utils.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({super.key});
@@ -129,12 +26,24 @@ class TrainingPageState extends State<TrainingPage> {
   bool updateVariable = false;
   bool ready = false;
 
+  NoteListener noteListener = NoteListener();
+
+
   @override
   void initState() {
     super.initState();
     staff.loadImages().then((_) {
       setState(() => ready = true);
     });
+
+    if(AppSettings().useNoteListener){
+      initListener();
+    }
+  }
+
+  Future <void> initListener() async {
+    await noteListener.getCapture().init();
+    noteListener.startCapture();
   }
 
   @override
@@ -163,11 +72,6 @@ class TrainingPageState extends State<TrainingPage> {
                 size: Size(width, height * 0.5),
                 painter: PreviewStaffPainter(
                   staff,
-                  numNotes,
-                  noteRange,
-                  lowestNote,
-                  trebleChecked,
-                  bassChecked,
                   false,
                   updateVariable,
                 ),
@@ -179,6 +83,15 @@ class TrainingPageState extends State<TrainingPage> {
               },
             )
                 : const SizedBox.shrink(),
+
+            AppSettings().useNoteListener
+              ? ValueListenableBuilder<List<int>>(
+                  valueListenable: noteListener.latestSamples,
+                  builder: (context, notes, _) {
+                  return Text('Current Note: ${notes.map((i) => noteNames[i]).toList()}');
+                  },
+                  )
+              : const Text("Not Listening"),
 
             const SizedBox(height: 30),
 

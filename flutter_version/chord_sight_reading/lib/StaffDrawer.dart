@@ -6,6 +6,8 @@ import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:ui' as ui;
 
+import 'package:chord_sight_reading/app_settings.dart';
+
 import 'dart:ui';
 
 
@@ -252,22 +254,36 @@ class Staff{
 }
 
 class PreviewStaffPainter extends CustomPainter {
-  final double numNotes;
-  final double noteRange;
-  final double lowestNote;
-  final bool trebleChecked;
-  final bool bassChecked;
+  double numNotes = AppSettings().numNotes;
+  double noteRange = AppSettings().noteRange;
+  double lowestNote = AppSettings().lowestNote;
+  bool trebleChecked = AppSettings().useTrebleClef;
+  bool bassChecked = AppSettings().useBassClef;
+
+  bool updateState = true;
+
+  List<int> notes = [];
+
   final bool drawingRange;
   final bool updateVariable; // kinda janky way to update the drawing, but it works and is
   final Staff staff;
 
 
-  PreviewStaffPainter(this.staff, this.numNotes,this.noteRange,this.lowestNote, this.trebleChecked, this.bassChecked, this.drawingRange, this.updateVariable);
+  PreviewStaffPainter(this.staff, this.drawingRange, this.updateVariable);
 
   @override
   void paint(Canvas canvas, Size size) {
 
-    List<int> notes = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
+    // print(updateVariable);
+
+    // if(updateVariable!=updateState){
+    //   print("inside");
+    //   notes = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
+    //   updateState = updateVariable;
+    // }
+
+      notes = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
+
 
     if(drawingRange){
       int minNote = lowestNote.ceil();
