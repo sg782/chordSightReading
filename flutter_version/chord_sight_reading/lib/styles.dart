@@ -17,6 +17,8 @@ class Styles {
 }
 
 class _DarkStyles {
+  final String name = "dark";
+
   final Color background = const Color(0xFF121212);
   final Color primary = const Color(0xFF1DB954);
   final Color accent = const Color(0xFFBB86FC);
@@ -45,6 +47,8 @@ class _DarkStyles {
 }
 
 class _LightStyles {
+  final String name = "light";
+
   final Color background = const Color(0xFFF5EDF9);
   final Color primary = const Color(0xFF4B0082);
   final Color accent = const Color(0xFF9370DB);
@@ -74,6 +78,7 @@ class _LightStyles {
 
 
 class _SunsetStyles {
+  final String name = "sunset";
   final Color background = const Color(0xFFFFF3E0); // warm cream
   final Color primary = const Color(0xFFFF7043); // deep orange
   final Color accent = const Color(0xFFFFA726); // sunbeam amber
@@ -103,6 +108,8 @@ class _SunsetStyles {
 
 
 class _RetroStyles {
+  final String name = "retro";
+
   final Color background = const Color(0xFF1F1D36); // dark purple
   final Color primary = const Color(0xFFE94560); // neon red
   final Color accent = const Color(0xFF0F3460); // steel blue
@@ -131,6 +138,8 @@ class _RetroStyles {
 }
 
 class _ParchmentStyles {
+  final String name = "parchment";
+
   final Color background = const Color(0xFFFFFBF0); // parchment cream
   final Color primary = const Color(0xFF2E2E2E); // dark gray (for buttons/icons)
   final Color accent = const Color(0xFF8C7853); // brass/golden-brown (for highlights)

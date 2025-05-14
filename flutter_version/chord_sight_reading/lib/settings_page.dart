@@ -85,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
               const SizedBox(height: 10),
 
               DropdownButton<String>(
-                value: 'light', // must be one of the keys
+                value: style.name, // must be one of the keys
                 items: Styles.themes.keys.map((theme) {
                   return DropdownMenuItem<String>(
                     value: theme,
@@ -98,6 +98,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     style = Styles.themes[value]!;
                   });
                 },
+                style: style.title,
+                dropdownColor: style.background,
               ),
 
               

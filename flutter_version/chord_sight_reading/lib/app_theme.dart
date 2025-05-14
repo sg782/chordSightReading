@@ -7,12 +7,8 @@ class AppTheme {
 
   AppTheme._internal();
 
-  bool _isDark = false;
   dynamic _themePreference = Styles.parchment;
 
-  void toggleTheme() {
-    _isDark = !_isDark;
-  }
 
   void setTheme(String theme){
     if(!Styles.themes.keys.contains(theme)){
@@ -21,8 +17,6 @@ class AppTheme {
     _themePreference = Styles.themes[theme]!;
   }
 
-
-  get isDark => _isDark;
 
   get current => _themePreference;
 }
