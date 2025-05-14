@@ -125,6 +125,7 @@ class Staff{
     }
 
     if(!trebleChecked && maxNote >= 26){
+      // draw ledger lines above bass stave
       int distance = (maxNote - middleCValue).ceil();
       int lineCount = 1+ (distance / 2).floor();
 
@@ -146,7 +147,7 @@ class Staff{
       }
     }
 
-    if(!bassChecked && minNote <= 22){
+    if(!bassChecked && minNote <= 23){
       int distance = (middleCValue - minNote).ceil();
       int lineCount = 1+ (distance / 2).floor();
 
@@ -180,7 +181,7 @@ class Staff{
       }
 
       double trebleClefYPosition = middleCYPosition - trebleClefHeight * (4/5); // adjusted by hand to fit nice
-      double trebleClefXPosition = 0;
+      double trebleClefXPosition = 20;
       final src = Rect.fromLTWH(0, 0, trebleClef!.width.toDouble(), trebleClef!.height.toDouble());
       final dst = Rect.fromLTWH(trebleClefXPosition, trebleClefYPosition, trebleClefWidth, trebleClefHeight); // Resize to 40x40 and draw at (100, 100)
 

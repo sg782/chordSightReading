@@ -8,6 +8,12 @@ class Styles {
   static final sunset = _SunsetStyles();
   static final retro = _RetroStyles();
   static final parchment = _ParchmentStyles();
+
+  static final validThemes = ['dark', 'light', 'sunset', 'retro', 'parchment'];
+  static final themeData = [_DarkStyles(), _LightStyles(), _SunsetStyles(), _RetroStyles(), _ParchmentStyles()];
+
+  static final Map<String, Object> themes = Map.fromIterables(validThemes, themeData);
+
 }
 
 class _DarkStyles {

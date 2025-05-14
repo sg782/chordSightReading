@@ -11,4 +11,6 @@ class AppSettings {
   bool useTrebleClef = true;
   bool useBassClef = false;
   bool useNoteListener = true;
+
+
 }

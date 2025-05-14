@@ -1,0 +1,9 @@
+To improve pitch detection
+
+increase sample rate
+hann/hamming window
+harmonic product spectrum
+autocorrelation
+yin algorithm
+bandpass filter
+only update if notes persist for N frames

@@ -24,7 +24,7 @@ class EntryPage extends StatelessWidget {
               const SizedBox(height: 50),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/second');
+                  Navigator.pushNamed(context, '/training');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: style.primary,
@@ -32,6 +32,20 @@ class EntryPage extends StatelessWidget {
                 ),
                 child: Text(
                   'Play',
+                  style: style.buttonText,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/customize');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: style.accent,
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+                ),
+                child: Text(
+                  'Customize Notes',
                   style: style.buttonText,
                 ),
               ),
@@ -50,19 +64,6 @@ class EntryPage extends StatelessWidget {
                 ),
               ),
 
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/audio_cap');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: style.accent,
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
-                ),
-                child: Text(
-                  'Audio',
-                  style: style.buttonText,
-                ),
-              ),
             ],
           ),
         ),

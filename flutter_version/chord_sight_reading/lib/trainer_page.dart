@@ -37,7 +37,7 @@ class TrainingPageState extends State<TrainingPage> {
   @override
   void initState() {
 
-    print(whiteKeyIndexToNoteIndex.toString());
+    // print(whiteKeyIndexToNoteIndex.toString());
     super.initState();
     staff.loadImages().then((_) {
       setState(() => ready = true);
@@ -54,14 +54,14 @@ class TrainingPageState extends State<TrainingPage> {
 
         List<int> displayNotesIdx = notesDisplay.map((i) => whiteKeyIndexToNoteIndex[i] ?? -1).toList();
 
-        print(displayNotesIdx);
+        // print(displayNotesIdx);
 
         List<int> notesHeardSorted = [...notesHeard]..sort();
         List<int> displayNotesIdxSorted = [...displayNotesIdx]..sort();
 
         if(ListEquality().equals(notesHeardSorted,displayNotesIdxSorted)){
           notesDisplay = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
-          print("equal!!!");
+          // print("equal!!!");
         }
 
       });
@@ -98,63 +98,136 @@ class TrainingPageState extends State<TrainingPage> {
 
     // make the notes out here
 
+    // return Scaffold(
+    //   backgroundColor: style.background,
+    //   body: SafeArea(
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         ready
+    //             ? GestureDetector(
+    //           child: RepaintBoundary(
+    //             child: CustomPaint(
+    //               size: Size(width, height * 0.5),
+    //               painter: PreviewStaffPainter(
+    //                 staff,
+    //                 false,
+    //                 notesDisplay,
+    //               ),
+    //             ),
+    //           ),
+    //           onTapDown: (TapDownDetails tapDetails) {
+    //             setState(() {
+    //               notesDisplay = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
+    //             });
+    //           },
+    //         )
+    //             : const SizedBox.shrink(),
+    //         // AppSettings().useNoteListener
+    //         //   ?   Text(notesHeard.toString())
+    //         //     : const Text("Not Listening"),
+    //         //
+    //         // const SizedBox(height: 30),
+    //
+    //         // ElevatedButton(
+    //         //   style: ElevatedButton.styleFrom(
+    //         //     backgroundColor: style.primary,
+    //         //     padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+    //         //   ),
+    //         //   onPressed: () {
+    //         //     Navigator.pop(context);
+    //         //   },
+    //         //   child: Text('Back!', style: style.buttonText),
+    //         // ),
+    //         Align(
+    //           alignment: Alignment.bottomLeft,
+    //           child: Padding(
+    //             padding: const EdgeInsets.all(16.0),
+    //             child: IconButton(
+    //               onPressed: () {
+    //                 Navigator.pop(context);
+    //               },
+    //               icon: const Icon(Icons.arrow_back),
+    //               color: Colors.black, // Or style.primary if desired
+    //               iconSize: 32,
+    //               style: ButtonStyle(
+    //                 backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+    //                 overlayColor: MaterialStateProperty.all<Color>(Colors.black12),
+    //                 shape: MaterialStateProperty.all<CircleBorder>(const CircleBorder()),
+    //               ),
+    //             ),
+    //           ),
+    //         ),
+    //
+    //       ],
+    //     ),
+    //   ),
+    // );
+
     return Scaffold(
       backgroundColor: style.background,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            ready
-                ? GestureDetector(
-              child: RepaintBoundary(
-                child: CustomPaint(
-                  size: Size(width, height * 0.5),
-                  painter: PreviewStaffPainter(
-                    staff,
-                    false,
-                    notesDisplay,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ready
+                    ? GestureDetector(
+                  child: RepaintBoundary(
+                    child: CustomPaint(
+                      size: Size(width, height * 0.5),
+                      painter: PreviewStaffPainter(
+                        staff,
+                        false,
+                        notesDisplay,
+                      ),
+                    ),
+                  ),
+                  onTapDown: (TapDownDetails tapDetails) {
+                    setState(() {
+                      notesDisplay = returnNoteArray(
+                        numNotes.ceil(),
+                        noteRange.ceil(),
+                        lowestNote.ceil(),
+                      );
+                    });
+                  },
+                )
+                    : const SizedBox.shrink(),
+                  // AppSettings().useNoteListener
+                  //   ?   Text(notesHeard.toString())
+                  //     : const Text("Not Listening"),
+                  //
+                  // const SizedBox(height: 30),
+              ],
+
+            ),
+            // Back button in bottom-left
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                  color: Colors.black,
+                  iconSize: 32,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                    overlayColor: MaterialStateProperty.all<Color>(Colors.black12),
+                    shape: MaterialStateProperty.all<CircleBorder>(const CircleBorder()),
                   ),
                 ),
               ),
-              onTapDown: (TapDownDetails tapDetails) {
-                setState(() {
-                  notesDisplay = returnNoteArray(numNotes.ceil(), noteRange.ceil(), lowestNote.ceil());
-                });
-              },
-            )
-                : const SizedBox.shrink(),
-
-            // AppSettings().useNoteListener
-            //   ? ValueListenableBuilder<List<int>>(
-            //       valueListenable: noteListener.latestSamples,
-            //       builder: (context, notes, _) {
-            //         // setState(() {
-            //         //   currentNotes = notes.toList();
-            //         // });
-            //       return Text('Current Note: ${notes.map((i) => noteNames[i]).toList()}');
-            //       },
-            //       )
-            //   : const Text("Not Listening"),
-            AppSettings().useNoteListener
-              ?   Text(notesHeard.toString())
-                : const Text("Not Listening"),
-
-            const SizedBox(height: 30),
-
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: style.primary,
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Back!', style: style.buttonText),
             ),
           ],
         ),
       ),
     );
+
   }
 }
 

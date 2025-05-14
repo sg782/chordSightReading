@@ -24,7 +24,8 @@ class NoteListener {
 
 
   // final List<double> _waveformBuffer = [];
-  int sampleRate = 16000;
+  int sampleRate = 44100;
+  int bufferSize = 16384;
 
   ValueNotifier<List<int>> latestSamples = ValueNotifier<List<int>>([]);
 
@@ -34,7 +35,7 @@ class NoteListener {
       print("Microphone permission not granted");
       return;
     }
-    await _cap.start(listener, onError, sampleRate: sampleRate, bufferSize: 3000);
+    await _cap.start(listener, onError, sampleRate: sampleRate, bufferSize: bufferSize);
   }
 
   FlutterAudioCapture getCapture() {
@@ -47,7 +48,27 @@ class NoteListener {
 
   void listener(dynamic obj) {
     final samples = List<double>.from(obj);
+
     final fft = FFT(samples.length);
+
+
+    // apply hann window before FFT
+    for(int i=0;i<samples.length;i++){
+      samples[i] *= (1-cos(2 * pi * i / (samples.length - 1)));
+    }
+
+    // try skewing window? to make notes resolve faster?
+    // for(int i=0;i<samples.length;i++){
+    //   int x = samples.length - i;
+    //   int exponent = 9;
+    //
+    //   double skew = pow(x / (samples.length - 1), exponent).toDouble();
+    //
+    //
+    //   samples[i] *= (1-cos(2 * pi * skew));
+    // }
+
+
     final freq = fft.realFft(samples);
 
     final magnitudes = freq.map((f) {
@@ -77,15 +98,10 @@ class NoteListener {
       }
     }
 
-    List<String> notes = topNNotes.map((i) => noteNames[i]).toList();
-
+    // print(topKDominantFrequencies);
+    // print(topKDominantFrequencies.map((i)=>(noteNames[binSearchNearest(noteFrequencies, i.toDouble())])).toList());
     latestSamples.value = topNNotes.toList();
 
-    // Keep only most recent 2048 samples
-    // _waveformBuffer.addAll(croppedMagnitudes);
-    // if (_waveformBuffer.length > 2048) {
-    //   _waveformBuffer.removeRange(0, _waveformBuffer.length - 2048);
-    // }
 
   }
 
