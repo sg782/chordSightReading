@@ -169,43 +169,34 @@ class TrainingPageState extends State<TrainingPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ready
-                    ? GestureDetector(
-                  child: RepaintBoundary(
-                    child: CustomPaint(
-                      size: Size(width, height * 0.5),
-                      painter: PreviewStaffPainter(
-                        staff,
-                        false,
-                        notesDisplay,
-                      ),
-                    ),
-                  ),
-                  onTapDown: (TapDownDetails tapDetails) {
-                    setState(() {
-                      notesDisplay = returnNoteArray(
-                        numNotes.ceil(),
-                        noteRange.ceil(),
-                        lowestNote.ceil(),
-                      );
-                    });
-                  },
-                )
-                    : const SizedBox.shrink(),
-                  // AppSettings().useNoteListener
-                  //   ?   Text(notesHeard.toString())
-                  //     : const Text("Not Listening"),
-                  //
-                  // const SizedBox(height: 30),
-              ],
 
-            ),
-            // Back button in bottom-left
-            Align(
-              alignment: Alignment.bottomLeft,
+            ready
+                ? GestureDetector(
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  size: Size(width, height),
+                  painter: PreviewStaffPainter(
+                    staff,
+                    false,
+                    notesDisplay,
+                  ),
+                ),
+              ),
+              onTapDown: (TapDownDetails tapDetails) {
+                setState(() {
+                  notesDisplay = returnNoteArray(
+                    numNotes.ceil(),
+                    noteRange.ceil(),
+                    lowestNote.ceil(),
+                  );
+                });
+              },
+            )
+                : const SizedBox.shrink(),
+
+            Positioned(
+              bottom: 20,
+              left: 20,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: IconButton(

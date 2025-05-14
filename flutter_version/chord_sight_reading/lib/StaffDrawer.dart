@@ -1,3 +1,4 @@
+import 'package:chord_sight_reading/styles.dart';
 import 'package:chord_sight_reading/utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'dart:ui' as ui;
 
 import 'package:chord_sight_reading/app_settings.dart';
+import 'package:chord_sight_reading/app_theme.dart';
 
 import 'dart:ui';
 
@@ -28,6 +30,8 @@ class Staff{
 
   static const double lineSpacing = 15;
 
+  final style = AppTheme().current;
+
   double middleCYPosition = 0;
   final double middleCValue = 24 ;
   final double noteHeight = lineSpacing; // new variable just for clarity
@@ -45,6 +49,17 @@ class Staff{
 
   final paint = Paint()
     ..color = Colors.black
+    ..strokeWidth = 2
+    ..filterQuality = FilterQuality.high;
+
+  final notePaint = Paint()
+    ..colorFilter = ColorFilter.mode(AppTheme().current.primary, BlendMode.srcIn)
+    // ..color = AppTheme().current.primary
+    ..strokeWidth = 2
+    ..filterQuality = FilterQuality.high;
+
+  final staffPaint = Paint()
+    ..color = AppTheme().current.primary
     ..strokeWidth = 2
     ..filterQuality = FilterQuality.high;
 
@@ -121,7 +136,7 @@ class Staff{
 
     // the uncovered case in either staff
     if(notes.contains(middleCValue.ceil())){
-      canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), paint);
+      canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), staffPaint);
     }
 
     if(!trebleChecked && maxNote >= 26){
@@ -131,7 +146,7 @@ class Staff{
 
       for(int i=0;i<lineCount;i++){
         ledgerY = middleCYPosition - noteHeight * (i - 0.5);
-        canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), paint);
+        canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), staffPaint);
 
       }
     }else if(trebleChecked && maxNote >= highAValue){
@@ -142,7 +157,7 @@ class Staff{
 
       for(int i=0;i<lineCount;i++){
         ledgerY = highAValueYPosition - noteHeight * (i - 0.5);
-        canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), paint);
+        canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), staffPaint);
 
       }
     }
@@ -153,7 +168,7 @@ class Staff{
 
       for(int i=0;i<lineCount;i++){
         ledgerY = middleCYPosition + noteHeight * (i + 0.5);
-        canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), paint);
+        canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), staffPaint);
       }
 
     }else if(bassChecked && minNote <= lowEValue){
@@ -166,7 +181,7 @@ class Staff{
 
       for(int i=0;i<lineCount;i++){
         ledgerY = lowEYPosition + noteHeight * (i + 0.5);
-        canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), paint);
+        canvas.drawLine(Offset(ledgerX - ledgerXOffset,ledgerY), Offset(ledgerX + ledgerXOffset,ledgerY), staffPaint);
       }
     }
   }
@@ -177,7 +192,7 @@ class Staff{
     if(trebleChecked){
       for(int i=5;i>0;i--){
         double lineY = middleCYPosition - ((i-0.5) * lineSpacing);
-        canvas.drawLine(Offset(sidePadding, lineY),Offset(size.width-sidePadding, lineY),paint);
+        canvas.drawLine(Offset(sidePadding, lineY),Offset(size.width-sidePadding, lineY),staffPaint);
       }
 
       double trebleClefYPosition = middleCYPosition - trebleClefHeight * (4/5); // adjusted by hand to fit nice
@@ -185,14 +200,14 @@ class Staff{
       final src = Rect.fromLTWH(0, 0, trebleClef!.width.toDouble(), trebleClef!.height.toDouble());
       final dst = Rect.fromLTWH(trebleClefXPosition, trebleClefYPosition, trebleClefWidth, trebleClefHeight); // Resize to 40x40 and draw at (100, 100)
 
-      canvas.drawImageRect(trebleClef!, src, dst, paint);
+      canvas.drawImageRect(trebleClef!, src, dst, notePaint);
 
     }
 
     if(bassChecked){
       for(int i=5;i>0;i--){
         double lineY = middleCYPosition + ((i+0.5) * lineSpacing);
-        canvas.drawLine(Offset(sidePadding, lineY),Offset(size.width-sidePadding, lineY),paint);
+        canvas.drawLine(Offset(sidePadding, lineY),Offset(size.width-sidePadding, lineY),staffPaint);
       }
 
       double bassClefYPosition = middleCYPosition + lineSpacing * (3/2); // adjusted by hand to fit nice
@@ -201,7 +216,7 @@ class Staff{
       final src = Rect.fromLTWH(0, 0, bassClef!.width.toDouble(), bassClef!.height.toDouble());
       final dst = Rect.fromLTWH(bassClefXPosition, bassClefYPosition, bassClefWidth, bassClefHeight); // Resize to 40x40 and draw at (100, 100)
 
-      canvas.drawImageRect(bassClef!, src, dst, paint);
+      canvas.drawImageRect(bassClef!, src, dst, notePaint);
     }
 
 
@@ -230,7 +245,7 @@ class Staff{
 
         final src = Rect.fromLTWH(0, 0, wholeNote!.width.toDouble(), wholeNote!.height.toDouble());
         final dst = Rect.fromLTWH(noteTopLeftX, noteTopLeftY, noteWidth, noteHeight); // Resize to 40x40 and draw at (100, 100)
-        canvas.drawImageRect(wholeNote!, src, dst, paint);
+        canvas.drawImageRect(wholeNote!, src, dst, notePaint);
 
     }
 
@@ -255,9 +270,9 @@ class Staff{
     double verticalLineX = size.width/2 - 50;
     double maxY = (middleCValue - minNote  + 3) * noteVerticalSpacing + middleCYPosition;
     double minY = (middleCValue - maxNote - 1) * noteVerticalSpacing + middleCYPosition;
-    canvas.drawLine(Offset(verticalLineX, minY), Offset(verticalLineX, maxY), linePaint);
-    canvas.drawLine(Offset(verticalLineX, minY), Offset(verticalLineX + noteWidth / 2, minY), linePaint);
-    canvas.drawLine(Offset(verticalLineX, maxY), Offset(verticalLineX + noteWidth / 2, maxY), linePaint);
+    canvas.drawLine(Offset(verticalLineX, minY), Offset(verticalLineX, maxY), staffPaint);
+    canvas.drawLine(Offset(verticalLineX, minY), Offset(verticalLineX + noteWidth / 2, minY), staffPaint);
+    canvas.drawLine(Offset(verticalLineX, maxY), Offset(verticalLineX + noteWidth / 2, maxY), staffPaint);
 
 
   }

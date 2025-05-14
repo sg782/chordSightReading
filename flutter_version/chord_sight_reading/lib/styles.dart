@@ -3,14 +3,10 @@ import 'package:flutter/material.dart';
 
 
 class Styles {
-  static final dark = _DarkStyles();
-  static final light = _LightStyles();
-  static final sunset = _SunsetStyles();
-  static final retro = _RetroStyles();
-  static final parchment = _ParchmentStyles();
+  static final parchment = _LightStyles(); // just for default style
 
-  static final validThemes = ['dark', 'light', 'sunset', 'retro', 'parchment'];
-  static final themeData = [_DarkStyles(), _LightStyles(), _SunsetStyles(), _RetroStyles(), _ParchmentStyles()];
+  static final validThemes = ['light', 'dark', 'soft', 'sunset', 'retro', 'parchment'];
+  static final themeData = [_LightStyles(), _DarkStyles(), _SoftStyles(), _SunsetStyles(), _RetroStyles(), _ParchmentStyles()];
 
   static final Map<String, Object> themes = Map.fromIterables(validThemes, themeData);
 
@@ -46,13 +42,44 @@ class _DarkStyles {
   );
 }
 
-class _LightStyles {
-  final String name = "light";
+class _SoftStyles {
+  final String name = "soft";
 
   final Color background = const Color(0xFFF5EDF9);
   final Color primary = const Color(0xFF4B0082);
   final Color accent = const Color(0xFF9370DB);
   final Color textColor = const Color(0xFF1C1C1C);
+
+  final TextStyle title = const TextStyle(
+    fontSize: 28,
+    fontWeight: FontWeight.bold,
+    color: Color(0xFF1C1C1C),
+  );
+
+  final TextStyle subtitle = const TextStyle(
+    fontSize: 16,
+    color: Color(0xFF444444),
+  );
+
+  final TextStyle buttonText = const TextStyle(
+    fontSize: 18,
+    color: Colors.white,
+  );
+
+  final TextStyle text = const TextStyle(
+    fontSize: 16,
+    color: Color(0xFF1C1C1C),
+  );
+}
+
+
+class _LightStyles {
+  final String name = "light";
+
+  final Color background = const Color(0xFFFFFFFF);
+  final Color primary = const Color(0xFF2E2E2E);
+  final Color accent = const Color(0xFF2E2E2E);
+  final Color textColor = const Color(0xFFFFFFFF);
 
   final TextStyle title = const TextStyle(
     fontSize: 28,
