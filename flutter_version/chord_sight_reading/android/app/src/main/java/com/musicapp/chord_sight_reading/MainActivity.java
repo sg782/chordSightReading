@@ -1,4 +1,4 @@
-package com.example.chord_sight_reading;
+package com.musicapp.chord_sight_reading;
 
 import io.flutter.embedding.android.FlutterActivity;
 
